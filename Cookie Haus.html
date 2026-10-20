@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cookie Haus</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f1ed;--surface:#ffffff;--ink:#5f3513;--muted:#8a6a4f;--line:#d9cfc2;--accent:#5f3513;--on-accent:#ffffff;--tint:#e9dfd2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#241810;--surface:#33231a;--ink:#f1e6d8;--muted:#c4aa90;--line:#5a4332;--accent:#e9dfd2;--on-accent:#3a2210;--tint:#44301f}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#241810;--surface:#33231a;--ink:#f1e6d8;--muted:#c4aa90;--line:#5a4332;--accent:#e9dfd2;--on-accent:#3a2210;--tint:#44301f}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Poppins,system-ui,sans-serif;line-height:1.6}
+h1,h2,h3{font-family:"Playfair Display",Georgia,serif;font-style:italic;font-weight:500;line-height:1.1;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-family:"Playfair Display",Georgia,serif;font-style:italic;font-size:1.4rem;font-weight:700}
+nav{display:flex;gap:20px;align-items:center;font-size:.92rem}
+nav a{color:inherit;text-decoration:none}
+.cartbtn{background:var(--accent);color:var(--on-accent);border:0;border-radius:99px;padding:8px 16px;font-weight:500}
+.hero{display:grid;grid-template-columns:1fr 1px 1fr;gap:0;min-height:78vh;align-items:center}
+.hero .left{padding:56px 32px 56px 0}
+.hero .rule{background:var(--ink);align-self:stretch}
+.hero .right{padding:56px 0 56px 32px}
+.hero h1{font-size:clamp(3.6rem,11vw,7.5rem);font-weight:700;letter-spacing:-.02em}
+.hero p{max-width:34ch;color:var(--muted);margin:20px 0 28px}
+.btn{display:inline-block;background:var(--accent);color:var(--on-accent);border:0;border-radius:99px;padding:13px 26px;font-weight:500;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.flav{list-style:none;margin:0;padding:0;font-size:1.15rem}
+.flav li{padding:12px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.flav li::before{content:"✦";font-size:.8rem}
+.right h2{font-size:2rem;margin-bottom:12px}
+section{padding:64px 0}
+section>.wrap>h2{font-size:clamp(2rem,5vw,3rem);margin-bottom:8px}
+.sub{color:var(--muted);margin:0 0 28px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:6px}
+.card .n{font-family:"Playfair Display",Georgia,serif;font-style:italic;font-size:2.4rem;line-height:1}
+.card .p{font-weight:600;margin-top:auto;padding-top:14px}
+.card button{margin-top:10px}
+.band{background:var(--tint)}
+.dr{display:flex;flex-wrap:wrap;gap:12px}
+.dr span{background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:10px 18px}
+footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-size:.92rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between}
+/* drawers & modals */
+.veil{position:fixed;inset:0;background:rgba(40,22,8,.55);z-index:40;display:none;align-items:center;justify-content:center;padding:16px}
+.veil.open{display:flex}
+.panel{background:var(--bg);border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow:auto;padding:24px;border:1px solid var(--line)}
+.panel h3{font-size:1.8rem;margin-bottom:4px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.step{display:flex;align-items:center;gap:10px}
+.step button{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--ink);background:transparent;font-size:1.1rem;line-height:1}
+.step button:disabled{opacity:.35;cursor:not-allowed}
+.step b{min-width:20px;text-align:center}
+.msg{font-size:.9rem;color:var(--muted);margin:10px 0}
+.msg.err{color:#b3261e}
+label{display:block;font-size:.88rem;font-weight:500;margin:12px 0 4px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.actions .btn{flex:1;text-align:center;cursor:pointer}
+.total{display:flex;justify-content:space-between;font-weight:600;font-size:1.1rem;padding-top:14px}
+.rm{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.85rem}
+@media(max-width:720px){.hero{grid-template-columns:1fr;min-height:0}.hero .rule{height:1px;width:100%}.hero .left{padding:40px 0 32px}.hero .right{padding:32px 0 40px}nav .lnk{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="logo">Cookie Haus</div>
+    <nav>
+      <a class="lnk" href="#sets">Cookie sets</a>
+      <a class="lnk" href="#minis">Mini cookies</a>
+      <a class="lnk" href="#drizzles">Drizzles</a>
+      <button class="cartbtn" id="openCart">Your order (<span id="count">0</span>)</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap hero">
+  <div class="left">
+    <h1>Cookie<br>Haus</h1>
+    <p>Fresh-baked cookies in four flavors. Pick a set, choose your flavors, and send your order straight to us on WhatsApp.</p>
+    <a class="btn" href="#sets">Start your order</a>
+  </div>
+  <div class="rule" aria-hidden="true"></div>
+  <div class="right">
+    <h2>Cookie flavors</h2>
+    <ul class="flav">
+      <li>Nutella Bliss</li><li>Biscoff Crunch</li><li>Cookies &amp; Crème</li><li>Chocolate Chip</li>
+    </ul>
+  </div>
+</div>
+
+<section id="sets"><div class="wrap">
+  <h2>Cookie sets</h2>
+  <p class="sub">Pick your flavors.</p>
+  <div class="grid" id="setsGrid"></div>
+</div></section>
+
+<section id="minis" class="band"><div class="wrap">
+  <h2>Mini cookies</h2>
+  <p class="sub">Bite-sized, choose your flavors.</p>
+  <div class="grid" id="minisGrid"></div>
+</div></section>
+
+<section id="drizzles"><div class="wrap">
+  <h2>Drizzles</h2>
+  <p class="sub">GHS 10 each. Add one while building a set.</p>
+  <div class="dr"><span>Chocolate Drizzle</span><span>Biscoff Drizzle</span><span>Caramel Drizzle</span></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <div><strong>Cookie Haus</strong></div>
+  <div>WhatsApp: <a href="https://wa.me/233537440435" style="color:inherit">0537440435</a></div>
+  <div>Snapchat: woah.hickmah</div>
+</div></footer>
+
+<!-- Builder -->
+<div class="veil" id="builder" role="dialog" aria-modal="true" aria-labelledby="bTitle">
+  <div class="panel">
+    <h3 id="bTitle"></h3>
+    <p class="msg" id="bMsg"></p>
+    <div id="bFlavors"></div>
+    <label for="bDrizzle">Drizzle (GHS 10)</label>
+    <select id="bDrizzle"></select>
+    <div class="total"><span>Price</span><span id="bPrice"></span></div>
+    <div class="actions">
+      <button class="btn ghost" id="bCancel">Cancel</button>
+      <button class="btn" id="bAdd">Add to order</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cart -->
+<div class="veil" id="cart" role="dialog" aria-modal="true" aria-labelledby="cTitle">
+  <div class="panel">
+    <h3 id="cTitle">Your order</h3>
+    <div id="cItems"></div>
+    <div id="cForm">
+      <div class="total"><span>Total</span><span id="cTotal"></span></div>
+      <label for="fName">Your name</label><input id="fName" autocomplete="name">
+      <label for="fPhone">Phone number</label><input id="fPhone" type="tel" autocomplete="tel">
+      <label for="fMode">Pickup or delivery</label>
+      <select id="fMode"><option>Pickup</option><option>Delivery</option></select>
+      <div id="addrBox" hidden><label for="fAddr">Delivery address</label><input id="fAddr" autocomplete="street-address"></div>
+      <label for="fNotes">Notes (optional)</label><textarea id="fNotes" rows="2"></textarea>
+      <p class="msg err" id="cErr" role="alert"></p>
+      <div class="actions">
+        <button class="btn ghost" id="cClose">Keep shopping</button>
+        <button class="btn" id="cSend">Send order on WhatsApp</button>
+      </div>
+      <p class="msg">Your order opens in WhatsApp as a ready-made message. We confirm it and arrange payment with you there.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const FLAVORS=["Nutella Bliss","Biscoff Crunch","Cookies & Crème","Chocolate Chip"];
+const DRIZZLES=["Chocolate Drizzle","Biscoff Drizzle","Caramel Drizzle"];
+const DRIZZLE_PRICE=10, WA="233537440435";
+const SETS=[{q:2,p:50,t:"Set of 2 cookies",k:"cookies"},{q:6,p:110,t:"Set of 6 cookies",k:"cookies"},{q:9,p:160,t:"Set of 9 cookies",k:"cookies"}];
+const MINIS=[{q:12,p:70,t:"12 mini cookies",k:"mini cookies"},{q:24,p:130,t:"24 mini cookies",k:"mini cookies"},{q:34,p:180,t:"34 mini cookies",k:"mini cookies"}];
+let cart=[], cur=null, picks={};
+const $=id=>document.getElementById(id);
+
+function renderCards(list,el){
+  $(el).innerHTML=list.map((o,i)=>`<div class="card"><div class="n">${o.q}</div><div>${o.t}</div><div class="p">GHS ${o.p}</div><button class="btn" data-g="${el}" data-i="${i}">Choose flavors</button></div>`).join("");
+}
+renderCards(SETS,"setsGrid");renderCards(MINIS,"minisGrid");
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button[data-g]");if(!b)return;
+  openBuilder((b.dataset.g==="setsGrid"?SETS:MINIS)[b.dataset.i]);
+});
+
+function openBuilder(o){
+  cur=o;picks={};FLAVORS.forEach(f=>picks[f]=0);
+  $("bTitle").textContent=o.t;
+  $("bDrizzle").innerHTML='<option value="">No drizzle</option>'+DRIZZLES.map(d=>`<option>${d}</option>`).join("");
+  drawBuilder();$("builder").classList.add("open");
+}
+function pickedCount(){return Object.values(picks).reduce((a,b)=>a+b,0)}
+function drawBuilder(){
+  const n=pickedCount(),left=cur.q-n;
+  $("bMsg").textContent=left>0?`Choose ${left} more ${cur.k} (${n} of ${cur.q} picked).`:`All ${cur.q} ${cur.k} picked.`;
+  $("bFlavors").innerHTML=FLAVORS.map((f,i)=>`<div class="row"><span>${f}</span><span class="step"><button data-f="${i}" data-d="-1" aria-label="Remove ${f}" ${picks[f]<1?"disabled":""}>−</button><b>${picks[f]}</b><button data-f="${i}" data-d="1" aria-label="Add ${f}" ${left<1?"disabled":""}>+</button></span></div>`).join("");
+  $("bAdd").style.opacity=left===0?1:.5;
+  updPrice();
+}
+function updPrice(){$("bPrice").textContent="GHS "+(cur.p+($("bDrizzle").value?DRIZZLE_PRICE:0))}
+$("bFlavors").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-f]");if(!b)return;
+  picks[FLAVORS[b.dataset.f]]+=+b.dataset.d;drawBuilder();
+});
+$("bDrizzle").onchange=updPrice;
+$("bCancel").onclick=()=>$("builder").classList.remove("open");
+$("bAdd").onclick=()=>{
+  if(pickedCount()!==cur.q){$("bMsg").textContent=`Pick exactly ${cur.q} ${cur.k} to continue.`;return}
+  const d=$("bDrizzle").value;
+  cart.push({t:cur.t,price:cur.p+(d?DRIZZLE_PRICE:0),flavors:FLAVORS.filter(f=>picks[f]).map(f=>`${picks[f]} x ${f}`),drizzle:d});
+  $("builder").classList.remove("open");drawCart();openCart();
+};
+
+function total(){return cart.reduce((a,c)=>a+c.price,0)}
+function drawCart(){
+  $("count").textContent=cart.length;
+  $("cItems").innerHTML=cart.length?cart.map((c,i)=>`<div class="row"><div><strong>${c.t}</strong><br><small>${c.flavors.join(", ")}${c.drizzle?" • "+c.drizzle:""}</small></div><div style="text-align:right">GHS ${c.price}<br><button class="rm" data-r="${i}">Remove</button></div></div>`).join(""):'<p class="msg">Your order is empty. Choose a cookie set or mini cookies to get started.</p>';
+  $("cForm").style.display=cart.length?"block":"none";
+  $("cTotal").textContent="GHS "+total();
+}
+$("cItems").addEventListener("click",e=>{const b=e.target.closest("[data-r]");if(b){cart.splice(+b.dataset.r,1);drawCart()}});
+function openCart(){drawCart();$("cart").classList.add("open")}
+$("openCart").onclick=openCart;
+$("cClose").onclick=()=>$("cart").classList.remove("open");
+$("fMode").onchange=()=>{$("addrBox").hidden=$("fMode").value!=="Delivery"};
+$("cart").addEventListener("click",e=>{if(e.target.id==="cart"&&!cart.length)$("cart").classList.remove("open")});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".veil.open").forEach(v=>v.classList.remove("open"))});
+
+$("cSend").onclick=()=>{
+  const name=$("fName").value.trim(),phone=$("fPhone").value.trim(),mode=$("fMode").value,addr=$("fAddr").value.trim();
+  if(!name||!phone){$("cErr").textContent="Enter your name and phone number.";return}
+  if(mode==="Delivery"&&!addr){$("cErr").textContent="Enter a delivery address.";return}
+  $("cErr").textContent="";
+  let m=`Hello Cookie Haus, I would like to place an order.\n\n`;
+  cart.forEach((c,i)=>{m+=`${i+1}. ${c.t} (GHS ${c.price})\n   ${c.flavors.join(", ")}${c.drizzle?"\n   Drizzle: "+c.drizzle:""}\n`});
+  m+=`\nTotal: GHS ${total()}\nName: ${name}\nPhone: ${phone}\n${mode}${mode==="Delivery"?": "+addr:""}`;
+  const n=$("fNotes").value.trim();if(n)m+=`\nNotes: ${n}`;
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(m)}`,"_blank");
+};
+drawCart();
+</script>
+</body>
+</html>
